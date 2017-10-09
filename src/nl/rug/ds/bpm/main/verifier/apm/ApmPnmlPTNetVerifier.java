@@ -1,4 +1,4 @@
-package nl.rug.ds.bpm.pnml.verifier.apm;
+package nl.rug.ds.bpm.main.verifier.apm;
 
 import hub.top.petrinet.PetriNet;
 import nl.rug.ds.bpm.event.EventHandler;
@@ -6,7 +6,7 @@ import nl.rug.ds.bpm.event.VerificationLog;
 import nl.rug.ds.bpm.event.VerificationResult;
 import nl.rug.ds.bpm.event.listener.VerificationEventListener;
 import nl.rug.ds.bpm.event.listener.VerificationLogListener;
-import nl.rug.ds.bpm.pnml.verifier.ExtPnmlStepper;
+import nl.rug.ds.bpm.main.verifier.IDPTNetStepper;
 import nl.rug.ds.bpm.specification.jaxb.BPMSpecification;
 import nl.rug.ds.bpm.specification.marshaller.SpecificationUnmarshaller;
 import nl.rug.ds.bpm.specification.parser.SetParser;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by Nick van Beest on 02-June-17.
  */
-public class PnmlVerifierAPM implements VerificationEventListener, VerificationLogListener {
+public class ApmPnmlPTNetVerifier implements VerificationEventListener, VerificationLogListener {
 	private EventHandler eventHandler;
 	private SetParser setParser;
 	private CheckerFactory factory;
@@ -37,7 +37,7 @@ public class PnmlVerifierAPM implements VerificationEventListener, VerificationL
 	private List<String> feedback;
 	private BPMSpecification bpmSpecification;
 	
-	public PnmlVerifierAPM(PetriNet pn, String nusmv2, boolean userFriendly) {
+	public ApmPnmlPTNetVerifier(PetriNet pn, String nusmv2, boolean userFriendly) {
 		reduce = true;
 		this.userFriendly = userFriendly;
 		
@@ -59,13 +59,13 @@ public class PnmlVerifierAPM implements VerificationEventListener, VerificationL
 		factory = new NuSMVFactory(eventHandler, new File(nusmv2));
 	}
 
-	public PnmlVerifierAPM(PetriNet pn, String specxml, String nusmv2, boolean userFriendly) {
+	public ApmPnmlPTNetVerifier(PetriNet pn, String specxml, String nusmv2, boolean userFriendly) {
 		this(pn, nusmv2, userFriendly);
 		
 		addSpecificationFromXML(specxml);
 	}
 	
-	public PnmlVerifierAPM(PetriNet pn, String[] specifications, String nusmv2, boolean userFriendly) {
+	public ApmPnmlPTNetVerifier(PetriNet pn, String[] specifications, String nusmv2, boolean userFriendly) {
 		this(pn, nusmv2, userFriendly);
 		
 		addSpecifications(specifications);
@@ -79,14 +79,14 @@ public class PnmlVerifierAPM implements VerificationEventListener, VerificationL
 	
 	public List<String> verify(Boolean getAllOutput) {
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		
 		if (bpmSpecification == null) {
 			bpmSpecification = getSpecifications();
 		}
 		
 		try {
-			stepper = new ExtPnmlStepper(pn);
+			stepper = new IDPTNetStepper(pn);
 			
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);

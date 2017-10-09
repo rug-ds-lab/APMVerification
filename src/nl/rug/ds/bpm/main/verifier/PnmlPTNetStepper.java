@@ -1,6 +1,6 @@
-package nl.rug.ds.bpm.pnml.verifier;
+package nl.rug.ds.bpm.main.verifier;
 
-import nl.rug.ds.bpm.pnml.reader.PNMLReader;
+import nl.rug.ds.bpm.pnml.ptnet.reader.PTNetReader;
 import nl.rug.ds.bpm.verification.stepper.Marking;
 import nl.rug.ds.bpm.verification.stepper.Stepper;
 
@@ -26,21 +26,21 @@ import hub.top.petrinet.Transition;
 /**
  * Created by Nick van Beest on 26-04-2017
  */
-public class PnmlStepper extends Stepper {
+public class PnmlPTNetStepper extends Stepper {
 	
 	private PetriNet pn;
 	private Map<String, Transition> transitionmap;
 	private Map<String, Place> placemap;
 	private Map<String, Set<String>> transitionIdmap;
 
-	public PnmlStepper(File pnml) throws JDOMException, IOException {
+	public PnmlPTNetStepper(File pnml) throws JDOMException, IOException {
 		super(pnml);
 		getPN();
 		initializeTransitionMaps();
 		initializePlaceMap();
 	}
 	
-	public PnmlStepper(PetriNet pn) throws JDOMException, IOException {
+	public PnmlPTNetStepper(PetriNet pn) throws JDOMException, IOException {
 		super();
 		this.pn = pn;
 		initializeTransitionMaps();
@@ -48,7 +48,7 @@ public class PnmlStepper extends Stepper {
 	}
 	
 	private void getPN() throws JDOMException, IOException {
-		pn = PNMLReader.parse(net);
+		pn = PTNetReader.parse(net);
 	}
 	
 	protected void initializeTransitionMaps() {

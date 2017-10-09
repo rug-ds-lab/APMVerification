@@ -55,7 +55,7 @@
 			<zipgroupfileset dir="lib" includes="umaBPDiff-1.0.jar"/>
 			<zipgroupfileset dir="lib" includes="unfolding.jar"/>
 			<manifest>
-				<attribute name="Main-Class" value="nl.rug.ds.bpm.pnml.verifier.PnmlVerifier"/>
+				<attribute name="Main-Class" value="nl.rug.ds.bpm.main.verifier.PnmlPTNetVerifier"/>
 			</manifest>
 		</jar>
 	</target>
@@ -72,7 +72,7 @@
 			<zipgroupfileset dir="lib" includes="umaBPDiff-1.0.jar"/>
 			<zipgroupfileset dir="lib" includes="unfolding.jar"/>
 			<manifest>
-				<attribute name="Main-Class" value="nl.rug.ds.bpm.pnml.specification.VariabilitySpecGen"/>
+				<attribute name="Main-Class" value="nl.rug.ds.bpm.main.specification.VariabilitySpecGen"/>
 			</manifest>
 		</jar>
 	</target>

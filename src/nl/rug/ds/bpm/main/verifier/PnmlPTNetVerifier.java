@@ -1,4 +1,4 @@
-package nl.rug.ds.bpm.pnml.verifier;
+package nl.rug.ds.bpm.main.verifier;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -21,7 +21,7 @@ import nl.rug.ds.bpm.verification.checker.nusmv2.NuSMVFactory;
 /**
  * Created by Heerko Groefsema on 07-Apr-17.
  */
-public class PnmlVerifier implements VerificationEventListener, VerificationLogListener {
+public class PnmlPTNetVerifier implements VerificationEventListener, VerificationLogListener {
 	private EventHandler eventHandler;
 	private SetParser setParser;
 	private CheckerFactory factory;
@@ -30,26 +30,26 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 	public static void main(String[] args) {
 		if (args.length > 2) {
 			//Normal call
-			PnmlVerifier pnmlVerifier = new PnmlVerifier(args[2]);
-			pnmlVerifier.setLogLevel(VerificationLog.INFO);
+			PnmlPTNetVerifier pnmlPTNetVerifier = new PnmlPTNetVerifier(args[2]);
+			pnmlPTNetVerifier.setLogLevel(VerificationLog.INFO);
 			if(args.length > 3)
-				pnmlVerifier.setReduction(Boolean.parseBoolean(args[4]));
-			pnmlVerifier.verify(args[0], args[1]);
+				pnmlPTNetVerifier.setReduction(Boolean.parseBoolean(args[4]));
+			pnmlPTNetVerifier.verify(args[0], args[1]);
 			
 			//Custom Set Call
-			//pnmlVerifier.addSpecification("Group(group1, t5, t3)");
-			//pnmlVerifier.addSpecification("AlwaysResponse(group1, t11)");
+			//pnmlPTNetVerifier.addSpecification("Group(group1, t5, t3)");
+			//pnmlPTNetVerifier.addSpecification("AlwaysResponse(group1, t11)");
 			
 			//Save custom set (optional)
-			//pnmlVerifier.saveSpecification(new File("./test/spec.xml"));
+			//pnmlPTNetVerifier.saveSpecification(new File("./test/spec.xml"));
 			
-			//pnmlVerifier.verify(args[0]);
+			//pnmlPTNetVerifier.verify(args[0]);
 		} else {
 			System.out.println("Usage: PNMLVerifier PNML_file Specification_file NuSMV2_binary_path");
 		}
 	}
 
-	public PnmlVerifier() {
+	public PnmlPTNetVerifier() {
 		reduce = true;
 
 		//Make a shared eventHandler
@@ -62,43 +62,43 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 		eventHandler.addEventListener(this);
 	}
 
-	public PnmlVerifier(File nusmv2) {
+	public PnmlPTNetVerifier(File nusmv2) {
 		this();
 		
 		//Create the wanted model checker factory
 		factory = new NuSMVFactory(eventHandler, nusmv2);
 	}
 
-	public PnmlVerifier(String nusmv2) {
+	public PnmlPTNetVerifier(String nusmv2) {
 		this(new File(nusmv2));
 	}
 	
-	public PnmlVerifier(String pnml, String specification, String nusmv2) {
+	public PnmlPTNetVerifier(String pnml, String specification, String nusmv2) {
 		this(nusmv2);
 		verify(pnml, specification);
 	}
 	
-	public PnmlVerifier(PetriNet pn, String specification, String nusmv2) {
+	public PnmlPTNetVerifier(PetriNet pn, String specification, String nusmv2) {
 		this(nusmv2);
 		verify(pn, specification);
 	}
 	
-	public PnmlVerifier(String pnml, BPMSpecification specification, String nusmv2) {
+	public PnmlPTNetVerifier(String pnml, BPMSpecification specification, String nusmv2) {
 		this(nusmv2);
 		verify(pnml, specification);
 	}
 	
-	public PnmlVerifier(String pnml, String specification, File nusmv2) {
+	public PnmlPTNetVerifier(String pnml, String specification, File nusmv2) {
 		this(nusmv2);
 		verify(pnml, specification);
 	}
 	
-	public PnmlVerifier(PetriNet pn, String specification, File nusmv2) {
+	public PnmlPTNetVerifier(PetriNet pn, String specification, File nusmv2) {
 		this(nusmv2);
 		verify(pn, specification);
 	}
 	
-	public PnmlVerifier(String pnml, BPMSpecification specification, File nusmv2) {
+	public PnmlPTNetVerifier(String pnml, BPMSpecification specification, File nusmv2) {
 		this(nusmv2);
 		verify(pnml, specification);
 	}
@@ -106,9 +106,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 	public void verify(String pnml) {
 		File pnmlFile = new File(pnml);
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pnmlFile);
+			stepper = new IDPTNetStepper(pnmlFile);
 			
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);
@@ -121,9 +121,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 	
 	public void verify(PetriNet pn) {
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pn);
+			stepper = new IDPTNetStepper(pn);
 			
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);
@@ -136,9 +136,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 
 	public void verify(PetriNet pn, BPMSpecification specification) {
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pn);
+			stepper = new IDPTNetStepper(pn);
 
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);
@@ -152,9 +152,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 	public void verify(String pnml, BPMSpecification specification) {
 		File pnmlFile = new File(pnml);
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pnmlFile);
+			stepper = new IDPTNetStepper(pnmlFile);
 			
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);
@@ -167,9 +167,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 	
 	public void verify(PetriNet pn, String specification) {
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pn);
+			stepper = new IDPTNetStepper(pn);
 			
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);
@@ -185,9 +185,9 @@ public class PnmlVerifier implements VerificationEventListener, VerificationLogL
 		File specificationFile = new File(specification);
 
 		//Make step class for specific Petri net type
-		ExtPnmlStepper stepper;
+		IDPTNetStepper stepper;
 		try {
-			stepper = new ExtPnmlStepper(pnmlFile);
+			stepper = new IDPTNetStepper(pnmlFile);
 
 			//Make a verifier which uses that step class
 			Verifier verifier = new Verifier(stepper, factory, eventHandler);

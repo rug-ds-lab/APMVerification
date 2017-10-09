@@ -1,4 +1,4 @@
-package nl.rug.ds.bpm.pnml.verifier;
+package nl.rug.ds.bpm.main.verifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,29 +14,29 @@ import hub.top.petrinet.Node;
 import hub.top.petrinet.PetriNet;
 import hub.top.petrinet.Place;
 import hub.top.petrinet.Transition;
-import nl.rug.ds.bpm.extpetrinet.ExtPetriNet;
-import nl.rug.ds.bpm.pnml.reader.ExtPNMLReader;
+import nl.rug.ds.bpm.pnml.ptnet.IDPTNet;
+import nl.rug.ds.bpm.pnml.ptnet.reader.IDPTNetReader;
 import nl.rug.ds.bpm.verification.stepper.Marking;
 import nl.rug.ds.bpm.verification.stepper.Stepper;
 
 /**
  * Created by Nick van Beest on 26-04-2017
  */
-public class ExtPnmlStepper extends Stepper {
+public class IDPTNetStepper extends Stepper {
 	
-	private ExtPetriNet pn;
+	private IDPTNet pn;
 	private Map<String, Transition> transitionmap;
 	private Map<String, Place> placemap;
 	private Map<String, Set<String>> transitionIdmap;
 
-	public ExtPnmlStepper(File pnml) throws JDOMException, IOException {
+	public IDPTNetStepper(File pnml) throws JDOMException, IOException {
 		super(pnml);
 		getPN();
 		initializeTransitionMaps();
 		initializePlaceMap();
 	}
 
-	public ExtPnmlStepper(PetriNet pn) throws JDOMException, IOException {
+	public IDPTNetStepper(PetriNet pn) throws JDOMException, IOException {
 		super();
 		this.pn = getExtPN(pn);
 		initializeTransitionMaps();
@@ -44,11 +44,11 @@ public class ExtPnmlStepper extends Stepper {
 	}
 
 	private void getPN() throws JDOMException, IOException {
-		pn = ExtPNMLReader.parse(net);
+		pn = IDPTNetReader.parse(net);
 	}
 	
-	private ExtPetriNet getExtPN(PetriNet pn) {
-		ExtPetriNet epn = new ExtPetriNet();
+	private IDPTNet getExtPN(PetriNet pn) {
+		IDPTNet epn = new IDPTNet();
 		HashMap<Node, Object> map = new HashMap<>();
 
 		for (Transition t: pn.getTransitions()) {

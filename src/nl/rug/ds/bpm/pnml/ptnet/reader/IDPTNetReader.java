@@ -1,9 +1,9 @@
-package nl.rug.ds.bpm.pnml.reader;
+package nl.rug.ds.bpm.pnml.ptnet.reader;
 
 import hub.top.petrinet.Node;
 import hub.top.petrinet.Place;
-import nl.rug.ds.bpm.extpetrinet.ExtPetriNet;
-import nl.rug.ds.bpm.extpetrinet.ExtTransition;
+import nl.rug.ds.bpm.pnml.ptnet.IDPTNet;
+import nl.rug.ds.bpm.pnml.ptnet.IDTransition;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +16,10 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
-public class ExtPNMLReader {
-	public static ExtPetriNet parse(File file) throws JDOMException, IOException {
+public class IDPTNetReader {
+	public static IDPTNet parse(File file) throws JDOMException, IOException {
 		Document doc = new SAXBuilder().build(file);
-		ExtPetriNet net = new ExtPetriNet();
+		IDPTNet net = new IDPTNet();
 		
 		Map<String, Node> nodes = new HashMap<>();
 		
@@ -65,9 +65,9 @@ public class ExtPNMLReader {
 			Node src = nodes.get(el.getAttribute("source").getValue());
 			Node tgt = nodes.get(el.getAttribute("target").getValue());
 			if (src instanceof Place)
-				net.addArc((Place)src, (ExtTransition)tgt);
+				net.addArc((Place)src, (IDTransition)tgt);
 			else
-				net.addArc((ExtTransition)src, (Place)tgt);
+				net.addArc((IDTransition)src, (Place)tgt);
 		}
 		
 		return net;

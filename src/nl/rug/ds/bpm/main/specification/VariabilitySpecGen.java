@@ -1,4 +1,4 @@
-package nl.rug.ds.bpm.pnml.specification;
+package nl.rug.ds.bpm.main.specification;
 
 import java.awt.FileDialog;
 import java.awt.Frame;

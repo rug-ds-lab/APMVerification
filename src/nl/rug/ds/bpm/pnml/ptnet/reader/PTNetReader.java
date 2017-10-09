@@ -1,4 +1,4 @@
-package nl.rug.ds.bpm.pnml.reader;
+package nl.rug.ds.bpm.pnml.ptnet.reader;
 
 import hub.top.petrinet.Node;
 import hub.top.petrinet.PetriNet;
@@ -16,7 +16,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
-public class PNMLReader {
+public class PTNetReader {
 	public static PetriNet parse(File file) throws JDOMException, IOException {
 		Document doc = new SAXBuilder().build(file);
 		PetriNet net = new PetriNet();
