@@ -14,33 +14,38 @@ The package is structured as followed:
   * event
     * listener
   * eventStructure
-  * pnml
-    * reader
+  * main
     * specification
     * verifier
+  * pnml.ptnet
+    * reader
   * specification
     * jaxb
     * map
     * marshaller
+    * parser
   * variability
     * utils
   * verification
     * checker
+      * nusmv2
+      * nuxmv
     * comparator
     * converter
-    * formula
     * map
     * model.kripke
     * optimizer
+      * propositionOptimizer
+      * stutterOptimizer
     * stepper
 
 ### Usage
 The package provides two core functionalities contained within the following classes:
 
-* nl.rug.ds.bpm.variability.VariabilitySpecification
-* nl.rug.ds.bpm.verification.Verifier
+* nl.rug.ds.bpm.main.specification.VariabilitySpecification
+* nl.rug.ds.bpm.main.verifier.verification.PnmlPTNetVerifier
 
-Self explanatory examples using these classes can be found in nl.rug.ds.bpm.pnml.
+Self explanatory examples using these classes can be found in nl.rug.ds.bpm.main.
 
 ### Custom specifications
 Specifications can be either generated automatically or defined manually.
@@ -99,7 +104,7 @@ with respect to the used input elements for each set.
 
 Each specification is defined by an id, type, and a list of inputElements. Each id should be unique and is used for
 feedback purposes. The type refers to a specificationType which is either predefined in resources/specificationTypes.xml
-or defined custom. The list of inputElements target the inputs of the specificationType. In case of overloading a
+or defined custom in the specification XML. The list of inputElements target the inputs of the specificationType. In case of overloading a
 target, the inputElements form a dis/con-junction as defined by that target's type.
 
 The optional elementGroups block defines sets of elements belonging to a group given an id. This id can then be used as
