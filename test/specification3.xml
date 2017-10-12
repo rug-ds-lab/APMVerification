@@ -1,6 +1,14 @@
 <bpmSpecification>
 	<specificationSets>
 		<specificationSet>
+			<variables>
+				<variable name="y" type="Integer" value="0"/>
+			</variables>
+
+			<conditions>
+				<condition>x > 0</condition>
+			</conditions>
+
 			<specifications>
 				<specification id="s1" type="AlwaysResponse">
 					<inputElements>
@@ -12,6 +20,12 @@
 					<inputElements>
 						<inputElement target="x">t9</inputElement>
 						<inputElement target="q">t39</inputElement>
+					</inputElements>
+				</specification>
+				<specification id="s3" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">t9</inputElement>
+						<inputElement target="q">Integer::y = 0</inputElement>
 					</inputElements>
 				</specification>
 			</specifications>

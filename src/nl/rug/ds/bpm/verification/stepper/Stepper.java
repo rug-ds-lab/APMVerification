@@ -1,6 +1,9 @@
 package nl.rug.ds.bpm.verification.stepper;
 
+import nl.rug.ds.bpm.specification.jaxb.Condition;
+
 import java.io.File;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -21,5 +24,5 @@ public abstract class Stepper {
 	
 	public abstract Marking initialMarking();
 	public abstract Set<Set<String>> parallelActivatedTransitions(Marking marking);
-	public abstract Set<Marking> fireTransition(Marking marking, String transition, Set<String> conditions);
+	public abstract Set<Marking> fireTransition(Marking marking, String transition, Collection<Condition> conditions);
 }

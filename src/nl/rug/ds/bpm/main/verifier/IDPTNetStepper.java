@@ -1,23 +1,18 @@
 package nl.rug.ds.bpm.main.verifier;
 
+import com.google.common.collect.Sets;
+import hub.top.petrinet.*;
+import nl.rug.ds.bpm.pnml.ptnet.IDPTNet;
+import nl.rug.ds.bpm.pnml.ptnet.reader.IDPTNetReader;
+import nl.rug.ds.bpm.specification.jaxb.Condition;
+import nl.rug.ds.bpm.verification.comparator.StringComparator;
+import nl.rug.ds.bpm.verification.stepper.Marking;
+import nl.rug.ds.bpm.verification.stepper.Stepper;
+import org.jdom.JDOMException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import nl.rug.ds.bpm.verification.comparator.StringComparator;
-import org.jdom.JDOMException;
-
-import com.google.common.collect.Sets;
-
-import hub.top.petrinet.Arc;
-import hub.top.petrinet.Node;
-import hub.top.petrinet.PetriNet;
-import hub.top.petrinet.Place;
-import hub.top.petrinet.Transition;
-import nl.rug.ds.bpm.pnml.ptnet.IDPTNet;
-import nl.rug.ds.bpm.pnml.ptnet.reader.IDPTNetReader;
-import nl.rug.ds.bpm.verification.stepper.Marking;
-import nl.rug.ds.bpm.verification.stepper.Stepper;
 
 /**
  * Created by Nick van Beest on 26-04-2017
@@ -204,7 +199,7 @@ public class IDPTNetStepper extends Stepper {
 	}
 	
 	@Override
-	public Set<Marking> fireTransition(Marking marking, String transitionId, Set<String> conditions) {
+	public Set<Marking> fireTransition(Marking marking, String transitionId, Collection<Condition> conditions) {
 		Set<Marking> afterfire = new HashSet<Marking>();
 
 		Boolean enabled = true;

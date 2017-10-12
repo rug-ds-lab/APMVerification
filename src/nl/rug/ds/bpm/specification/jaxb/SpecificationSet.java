@@ -12,13 +12,19 @@ import java.util.List;
 
 @XmlRootElement
 public class SpecificationSet {
+    private List<Variable> variables;
     private List<Condition> conditions;
     private List<Specification> specifications;
 
     public SpecificationSet() {
+    	variables = new ArrayList<>();
         conditions = new ArrayList<>();
         specifications = new ArrayList<>();
     }
+
+	@XmlElementWrapper(name = "variables")
+	@XmlElement(name = "variable")
+	public List<Variable> getVariables() { return variables; }
 
     @XmlElementWrapper(name = "conditions")
     @XmlElement(name = "condition")
