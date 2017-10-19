@@ -47,6 +47,17 @@ The package provides two core functionalities contained within the following cla
 
 Self explanatory examples using these classes can be found in nl.rug.ds.bpm.main.
 
+### Ant build
+Two Ant builds are available for testing purposes:
+
+* jar pnml verifier
+  Builds a Jar file that can be called with a pnml file, specification xml, and NuSMV2/NuXMV binary location to verify
+  the given pnml place transition net against the specifications defined in the specification xml file. Its output is
+  the verification results.
+* jar pnml specification generation
+  Builds a Jar file that can be called with one or more pnml files. Its output is a variability specification
+  describing common behavior between the pnml files.
+
 ### Custom specifications
 Specifications can be either generated automatically or defined manually.
 
@@ -124,7 +135,7 @@ The Stepper should implement the following three methods:
 	public Marking initialMarking()
 	% Returns the initial marking of your net
 
-	public Set<Marking> fireTransition(Marking marking, String transition, Set<String> conditions)
+	public Set<Marking> fireTransition(Marking marking, String transition, Collection<Condition> conditions)
 	% Given a current marking, the unique identifier of a transition, and optional limiting
 	% conditions, returns the marking after firing the transition starting from the given marking.
 
