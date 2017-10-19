@@ -3,6 +3,7 @@
 		<specificationSet>
 			<variables>
 				<variable name="y" type="Integer" value="0"/>
+				<variable name="z" type="Integer"/>
 			</variables>
 
 			<conditions>

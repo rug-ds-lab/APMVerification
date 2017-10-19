@@ -32,6 +32,18 @@ public class DataMarking extends Marking {
 			setVariable(variable);
 	}
 
+	public boolean setVariableValue(String variable, String value) {
+		boolean exists = true;
+		if (variables.containsKey(variable))
+			variables.get(variable).setValue(value);
+		else exists = false;
+		return exists;
+	}
+
+	public boolean variableExists(String variable) {
+		return variables.containsKey(variable);
+	}
+
 	public DataMarking clone() {
 		DataMarking dataMarking = (DataMarking) super.clone();
 		for (String key: variables.keySet())

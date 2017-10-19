@@ -31,7 +31,7 @@ public class PnmlPTNetVerifier implements VerificationEventListener, Verificatio
 		if (args.length > 2) {
 			//Normal call
 			PnmlPTNetVerifier pnmlPTNetVerifier = new PnmlPTNetVerifier(args[2]);
-			pnmlPTNetVerifier.setLogLevel(VerificationLog.VERBOSE);
+			pnmlPTNetVerifier.setLogLevel(VerificationLog.INFO);
 			if(args.length > 3)
 				pnmlPTNetVerifier.setReduction(Boolean.parseBoolean(args[4]));
 			pnmlPTNetVerifier.verify(args[0], args[1]);

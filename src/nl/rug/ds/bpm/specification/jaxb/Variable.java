@@ -5,7 +5,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Variable {
-	private String name, type, value;
+	private String name, type = "";
+	private String value = null;
 
 	public Variable() {}
 
