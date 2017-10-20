@@ -17,22 +17,24 @@ import java.util.*;
 /**
  * Created by Nick van Beest on 26-04-2017
  */
-public class PnmlPTNetStepper extends Stepper {
-	
+public class PnmlPTNetStepper implements Stepper {
+	private File net;
 	private PetriNet pn;
 	private Map<String, Transition> transitionmap;
 	private Map<String, Place> placemap;
 	private Map<String, Set<String>> transitionIdmap;
 
 	public PnmlPTNetStepper(File pnml) throws JDOMException, IOException {
-		super(pnml);
+		if (!pnml.exists() || !pnml.canRead())
+			throw new IOException();
+		
+		this.net = pnml;
 		getPN();
 		initializeTransitionMaps();
 		initializePlaceMap();
 	}
 	
 	public PnmlPTNetStepper(PetriNet pn) throws JDOMException, IOException {
-		super();
 		this.pn = pn;
 		initializeTransitionMaps();
 		initializePlaceMap();
@@ -104,6 +106,11 @@ public class PnmlPTNetStepper extends Stepper {
 	
 	private String getId(Transition t) {
 		return t.getName() + "(" + t.id + ")";
+	}
+	
+	@Override
+	public void setConditions(Collection<Condition> conditions) {
+		//TODO
 	}
 	
 	@Override
@@ -184,7 +191,7 @@ public class PnmlPTNetStepper extends Stepper {
 	}
 	
 	@Override
-	public Set<Marking> fireTransition(Marking marking, String transitionId, Collection<Condition> conditions) {
+	public Set<Marking> fireTransition(Marking marking, String transitionId) {
 		Set<Marking> afterfire = new HashSet<Marking>();
 
 		Boolean enabled = true;

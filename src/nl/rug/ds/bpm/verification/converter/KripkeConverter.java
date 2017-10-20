@@ -1,7 +1,6 @@
 package nl.rug.ds.bpm.verification.converter;
 
 import nl.rug.ds.bpm.event.EventHandler;
-import nl.rug.ds.bpm.specification.jaxb.Condition;
 import nl.rug.ds.bpm.specification.jaxb.Variable;
 import nl.rug.ds.bpm.verification.comparator.StringComparator;
 import nl.rug.ds.bpm.verification.map.IDMap;
@@ -11,7 +10,6 @@ import nl.rug.ds.bpm.verification.stepper.DataMarking;
 import nl.rug.ds.bpm.verification.stepper.Marking;
 import nl.rug.ds.bpm.verification.stepper.Stepper;
 
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,15 +17,11 @@ public class KripkeConverter {
     private EventHandler eventHandler;
 	private Stepper parallelStepper;
     private Kripke kripke;
-    private List<Condition> conditions;
-    private List<Variable> variables;
     private IDMap idMap;
-
-    public KripkeConverter(EventHandler eventHandler, Stepper paralelStepper, List<Condition> conditions, List<Variable> variables, IDMap idMap) {
+    
+    public KripkeConverter(EventHandler eventHandler, Stepper paralelStepper, IDMap idMap) {
         this.eventHandler = eventHandler;
         this.parallelStepper = paralelStepper;
-        this.conditions = conditions;
-        this.variables = variables;
         
         this.idMap = new IDMap("t", idMap.getIdToAp(), idMap.getApToId());
         
@@ -41,14 +35,8 @@ public class KripkeConverter {
 
         Marking marking = parallelStepper.initialMarking();
         if (marking instanceof DataMarking) {
-            for (Variable v: variables) {
-                if (((DataMarking) marking).variableExists(v.getName())) {
-                    if (v.getValue() != null)
-                        ((DataMarking) marking).setVariableValue(v.getName(), v.getValue());
-                }
-                else ((DataMarking) marking).setVariable(v);
+            for (Variable v : ((DataMarking) marking).getVariables())
                 vars.add(v.toString());
-            }
         }
 
 		for (Set<String> enabled: parallelStepper.parallelActivatedTransitions(marking)) {
@@ -61,8 +49,8 @@ public class KripkeConverter {
             kripke.addInitial(found);
             
             for (String transition: enabled)
-                for (Marking step: parallelStepper.fireTransition(marking, transition, conditions)) {
-                    ConverterAction converterAction = new ConverterAction(eventHandler, kripke, parallelStepper, idMap, step, found, conditions);
+                for (Marking step : parallelStepper.fireTransition(marking, transition)) {
+                    ConverterAction converterAction = new ConverterAction(eventHandler, kripke, parallelStepper, idMap, step, found);
                     converterAction.compute();
                 }
         }

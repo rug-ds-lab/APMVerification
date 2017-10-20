@@ -1,7 +1,6 @@
 package nl.rug.ds.bpm.verification.converter;
 
 import nl.rug.ds.bpm.event.EventHandler;
-import nl.rug.ds.bpm.specification.jaxb.Condition;
 import nl.rug.ds.bpm.specification.jaxb.Variable;
 import nl.rug.ds.bpm.verification.comparator.StringComparator;
 import nl.rug.ds.bpm.verification.map.IDMap;
@@ -12,7 +11,6 @@ import nl.rug.ds.bpm.verification.stepper.Marking;
 import nl.rug.ds.bpm.verification.stepper.Stepper;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.RecursiveAction;
@@ -27,16 +25,14 @@ public class ConverterAction extends RecursiveAction {
 	private IDMap idMap;
 	private Marking marking;
 	private State previous;
-	private List<Condition> conditions;
 	
-	public ConverterAction(EventHandler eventHandler, Kripke kripke, Stepper stepper, IDMap idMap, Marking marking, State previous, List<Condition> conditions) {
+	public ConverterAction(EventHandler eventHandler, Kripke kripke, Stepper stepper, IDMap idMap, Marking marking, State previous) {
 		this.eventHandler = eventHandler;
 		this.kripke = kripke;
 		this.stepper = stepper;
 		this.idMap = idMap;
 		this.marking = marking;
 		this.previous = previous;
-		this.conditions = conditions;
 	}
 	
 	@Override
@@ -66,8 +62,8 @@ public class ConverterAction extends RecursiveAction {
 				}
 				Set<ConverterAction> nextActions = new HashSet<>();
 				for (String transition: enabled)
-					for (Marking step: stepper.fireTransition(marking.clone(), transition, conditions))
-						nextActions.add(new ConverterAction(eventHandler, kripke, stepper, idMap, step, found, conditions));
+					for (Marking step : stepper.fireTransition(marking.clone(), transition))
+						nextActions.add(new ConverterAction(eventHandler, kripke, stepper, idMap, step, found));
 				
 				invokeAll(nextActions);
 			}
@@ -83,7 +79,6 @@ public class ConverterAction extends RecursiveAction {
 			if (id.startsWith("silent")) id = "silent"; // this line has to be tested more thoroughly
 														// It's a quick fix to handle situations where multiple silents starting with "silent"
 			idMap.addID(id);
-			
 			aps.add(idMap.getAP(id));
 			
 			if(!exist)

@@ -17,22 +17,24 @@ import java.util.*;
 /**
  * Created by Nick van Beest on 26-04-2017
  */
-public class IDPTNetStepper extends Stepper {
-	
+public class IDPTNetStepper implements Stepper {
+	private File net;
 	private IDPTNet pn;
 	private Map<String, Transition> transitionmap;
 	private Map<String, Place> placemap;
 	private Map<String, Set<String>> transitionIdmap;
 
 	public IDPTNetStepper(File pnml) throws JDOMException, IOException {
-		super(pnml);
+		if (!pnml.exists() || !pnml.canRead())
+			throw new IOException();
+		
+		this.net = pnml;
 		getPN();
 		initializeTransitionMaps();
 		initializePlaceMap();
 	}
 
 	public IDPTNetStepper(PetriNet pn) throws JDOMException, IOException {
-		super();
 		this.pn = getExtPN(pn);
 		initializeTransitionMaps();
 		initializePlaceMap();
@@ -133,6 +135,11 @@ public class IDPTNetStepper extends Stepper {
 	}
 	
 	@Override
+	public void setConditions(Collection<Condition> conditions) {
+		//TODO
+	}
+	
+	@Override
 	public Marking initialMarking() {
 		Marking initial = new Marking();
 		
@@ -199,7 +206,7 @@ public class IDPTNetStepper extends Stepper {
 	}
 	
 	@Override
-	public Set<Marking> fireTransition(Marking marking, String transitionId, Collection<Condition> conditions) {
+	public Set<Marking> fireTransition(Marking marking, String transitionId) {
 		Set<Marking> afterfire = new HashSet<Marking>();
 
 		Boolean enabled = true;

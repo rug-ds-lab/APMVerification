@@ -12,6 +12,7 @@ import nl.rug.ds.bpm.verification.model.kripke.Kripke;
 import nl.rug.ds.bpm.verification.model.kripke.State;
 import nl.rug.ds.bpm.verification.optimizer.propositionOptimizer.PropositionOptimizer;
 import nl.rug.ds.bpm.verification.optimizer.stutterOptimizer.StutterOptimizer;
+import nl.rug.ds.bpm.verification.stepper.DataStepper;
 import nl.rug.ds.bpm.verification.stepper.Stepper;
 
 import java.util.HashSet;
@@ -47,20 +48,23 @@ public class SetVerifier {
 		
 		eventHandler.logInfo("Loading specification set");
 		
+		stepper.setConditions(conditions);
 		eventHandler.logVerbose("Conditions: ");
 		for(Condition condition: conditions)
 			eventHandler.logVerbose("\t" + condition.getCondition());
-
-		eventHandler.logVerbose("Variables: ");
-		for(Variable variable: variables)
-			eventHandler.logVerbose("\t" + variable.toString());
 		
+		if (stepper instanceof DataStepper) {
+			((DataStepper) stepper).setInitialVariables(variables);
+			eventHandler.logVerbose("Variables: ");
+			for (Variable variable : variables)
+				eventHandler.logVerbose("\t" + variable.toString());
+		}
 		specIdMap = getIdMap();
 		groupMap = getGroupMap(specIdMap);
 	}
 
 	public void buildKripke(boolean reduce) {
-		KripkeConverter converter = new KripkeConverter(eventHandler, stepper, conditions, variables, specIdMap);
+		KripkeConverter converter = new KripkeConverter(eventHandler, stepper, specIdMap);
 		
 		eventHandler.logInfo("Calculating Kripke structure");
 		long t0 = System.currentTimeMillis();
