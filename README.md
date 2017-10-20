@@ -50,11 +50,11 @@ Self explanatory examples using these classes can be found in nl.rug.ds.bpm.main
 ### Ant build
 Two Ant builds are available for testing purposes:
 
-* jar pnml verifier
+* **jar pnml verifier.**\
   Builds a Jar file that can be called with a pnml file, specification xml, and NuSMV2/NuXMV binary location to verify
   the given pnml place transition net against the specifications defined in the specification xml file. Its output is
   the verification results.
-* jar pnml specification generation
+* **jar pnml specification generation.**\
   Builds a Jar file that can be called with one or more pnml files. Its output is a variability specification
   describing common behavior between the pnml files.
 
@@ -64,6 +64,17 @@ Specifications can be either generated automatically or defined manually.
     <bpmSpecification>
         <specificationSets>
             <specificationSet>
+                % Optional			
+                <conditions>
+                    <condition>x > 0</condition>
+                </conditions>
+                
+                % For use with DataStepper
+                <variables>
+                    <variable name="y" type="Integer" value="0"/>
+                    <variable name="z" type="Integer"/>
+                </variables>
+                
                 <specifications>
                     <specification id="s1" type="AlwaysResponse">
                         <inputElements>
@@ -81,7 +92,7 @@ Specifications can be either generated automatically or defined manually.
                 </specifications>
             </specificationSet>
         </specificationSets>
-
+        
         <elementGroups>
             <group id="start">
                 <elements>
@@ -90,7 +101,7 @@ Specifications can be either generated automatically or defined manually.
                 </elements>
             </group>
         </elementGroups>
-
+        
         <specificationTypes>
             <specificationType id="AlwaysNext">
                 <inputs>
@@ -113,6 +124,13 @@ Specifications are divided into specificationSets to ensure effective model redu
 separate model is generated, reduced, and verified. Reduction is accomplished by calculating a stutter equivalent model
 with respect to the used input elements for each set.
 
+Conditions can be specified optionally per specificationSet to limit the paths taken by the verification algorithm. 
+In this case, the specifications in that specificationSet are verified only on states reachable under those conditions.
+
+Variables can be specified and used as atomic proportions in combination with DataSteppers (See below). In this case a 
+more detailed model is generated that includes those variables, but requires a petri net with high-level functionality. 
+Variables may specify initial values.
+
 Each specification is defined by an id, type, and a list of inputElements. Each id should be unique and is used for
 feedback purposes. The type refers to a specificationType which is either predefined in resources/specificationTypes.xml
 or defined custom in the specification XML. The list of inputElements target the inputs of the specificationType. In case of overloading a
@@ -128,19 +146,27 @@ inputs. The language of a formula can be either _CTLSPEC_, _LTLSPEC_, or _JUSTIC
 ### Other Petri net formats
 
 The verification classes can be easily extended to allow the use of other Petri net formats. All that is required is a
-class that extends nl.rug.ds.bpm.verification.stepper.Stepper, which is then passed to nl.rug.ds.bpm.verification.Verifier.
+class that implements nl.rug.ds.bpm.verification.stepper.Stepper, which is then passed to nl.rug.ds.bpm.verification.Verifier.
 
-The Stepper should implement the following three methods:
+The Stepper should implement the following four methods:
 
-	public Marking initialMarking()
-	% Returns the initial marking of your net
-
-	public Set<Marking> fireTransition(Marking marking, String transition, Collection<Condition> conditions)
-	% Given a current marking, the unique identifier of a transition, and optional limiting
-	% conditions, returns the marking after firing the transition starting from the given marking.
-
-	public Set<Set<String>> parallelActivatedTransitions(Marking marking)
+	void setConditions(Collection<Condition> conditions);
+	% Sets the conditions that limit which paths can be followed.
+        
+	Marking initialMarking();
+	% Returns the initial marking of your net.
+        
+	Set<Marking> fireTransition(Marking marking, String transition);
+	% Given a current marking and the unique identifier of a transition, 
+	% returns the marking after firing the transition using the given marking.
+        
+	Set<Set<String>> parallelActivatedTransitions(Marking marking);
 	% Given a marking, returns Y_par(M) as defined in [2].
+	
+A stepper that uses and tracks data variables implements nl.rug.ds.bpm.verification.stepper.DataStepper instead. DataStepper extends Stepper with one method and uses the nl.rug.ds.bpm.verification.stepper.DataMarking class to store variables as additional atomic proportions.
+
+	void setInitialVariables(Collection<Variable> variables);
+	% Sets the variables that are included as atomic proportions, and (optionally) their initial values.
 
 ### Related publications
 For more information on the inner workings of this package, please see the following publications, or when incorporating this package into your work, please cite the following publications.
