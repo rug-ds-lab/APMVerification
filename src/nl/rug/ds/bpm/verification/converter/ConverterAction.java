@@ -44,7 +44,8 @@ public class ConverterAction extends RecursiveAction {
 		Set<String> vars = new TreeSet<>(new StringComparator());
 		if (marking instanceof DataMarking) {
 			for (Variable v: ((DataMarking) marking).getVariables())
-				vars.add(v.toString());
+				if (v.isTracked())
+					vars.add(v.toString());
 		}
 
 		for (Set<String> enabled: stepper.parallelActivatedTransitions(marking)) {

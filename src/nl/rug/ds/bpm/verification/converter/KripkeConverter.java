@@ -36,7 +36,8 @@ public class KripkeConverter {
         Marking marking = parallelStepper.initialMarking();
         if (marking instanceof DataMarking) {
             for (Variable v : ((DataMarking) marking).getVariables())
-                vars.add(v.toString());
+                if (v.isTracked())
+                    vars.add(v.toString());
         }
 
 		for (Set<String> enabled: parallelStepper.parallelActivatedTransitions(marking)) {
